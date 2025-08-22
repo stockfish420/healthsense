@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSense Admin Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0D6EFD;
+            --secondary: #20C997;
+            --dark: #212529;
+            --light: #F8F9FA;
+            --text: #6C757D;
+        }
+        
+        body {
+            background: white;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: left;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+        
+        .interaction-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+            border: 1px solid #E9ECEF;
+            transition: all 0.3s ease;
+        }
+        
+        .interaction-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .interaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .interaction-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+            border: none;
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #1ba085;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #E9ECEF;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 12px;
+            padding: 8px 16px;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--primary);
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #E9ECEF;
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .interaction-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginSection" class="login-container">
+        <div class="text-center mb-4">
+            <h2><i class="bi bi-heart-pulse-fill me-2"></i>HealthSense</h2>
+            <p class="text-muted">Admin Dashboard</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </button>
+        </form>
+        
+        <div id="loginError" class="alert alert-danger mt-3 hidden"></div>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div id="dashboardSection" class="dashboard-container hidden">
+        <div class="dashboard-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1><i class="bi bi-heart-pulse-fill me-2"></i>HealthSense Admin Dashboard</h1>
+                    <p class="mb-0">Monitor patient interactions and system analytics</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="index.html" class="btn btn-outline-light btn-sm" style="border-radius: 12px; padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3); color: white; text-decoration: none;">
+                        <i class="bi bi-house me-1"></i>Back to App
+                    </a>
+                    <button id="logoutBtn" class="btn logout-btn">
+                        <i class="bi bi-box-arrow-left me-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Analytics Stats -->
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stat-number" id="totalReports">0</div>
+                <div class="stat-label">Total Reports Processed</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stat-number" id="avgProcessingTime">0</div>
+                <div class="stat-label">Avg Processing Time (ms)</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stat-number" id="totalTests">0</div>
+                <div class="stat-label">Total Tests Analyzed</div>
+            </div>
+        </div>
+        
+        <!-- Common Tests -->
+        <div class="stats-card">
+            <h5><i class="bi bi-flask me-2"></i>Most Common Tests</h5>
+            <div id="commonTests" class="row">
+                <!-- Common tests will be populated here -->
+            </div>
+        </div>
+        
+        <!-- Export Section -->
+        <div class="stats-card">
+            <h5><i class="bi bi-download me-2"></i>Export Data</h5>
+            <div class="d-flex gap-2">
+                <button id="exportJSON" class="btn btn-secondary">
+                    <i class="bi bi-file-code me-2"></i>Export JSON
+                </button>
+                <button id="exportCSV" class="btn btn-secondary">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export CSV
+                </button>
+            </div>
+        </div>
+        
+        <!-- Interactions List -->
+        <div class="stats-card">
+            <h5><i class="bi bi-chat-dots me-2"></i>Patient Interactions</h5>
+            <div id="interactionsList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading interactions...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        class AdminDashboard {
+            constructor() {
+                this.token = localStorage.getItem('admin_token');
+                this.interactions = [];
+                this.analytics = {};
+                
+                this.initializeElements();
+                this.initializeEventListeners();
+                this.checkAuthStatus();
+            }
+            
+            initializeElements() {
+                this.loginSection = document.getElementById('loginSection');
+                this.dashboardSection = document.getElementById('dashboardSection');
+                this.loginForm = document.getElementById('loginForm');
+                this.usernameInput = document.getElementById('username');
+                this.passwordInput = document.getElementById('password');
+                this.loginError = document.getElementById('loginError');
+                this.logoutBtn = document.getElementById('logoutBtn');
+                this.interactionsList = document.getElementById('interactionsList');
+                this.exportJSON = document.getElementById('exportJSON');
+                this.exportCSV = document.getElementById('exportCSV');
+            }
+            
+            initializeEventListeners() {
+                this.loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                this.logoutBtn.addEventListener('click', () => this.handleLogout());
+                this.exportJSON.addEventListener('click', () => this.exportData('json'));
+                this.exportCSV.addEventListener('click', () => this.exportData('csv'));
+            }
+            
+            checkAuthStatus() {
+                if (this.token) {
+                    this.showDashboard();
+                    this.loadInteractions();
+                } else {
+                    this.showLogin();
+                }
+            }
+            
+            async handleLogin(e) {
+                e.preventDefault();
+                
+                const username = this.usernameInput.value;
+                const password = this.passwordInput.value;
+                
+                try {
+                    const response = await fetch('/api/admin/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        this.token = data.token;
+                        localStorage.setItem('admin_token', this.token);
+                        this.showDashboard();
+                        this.loadInteractions();
+                        this.clearLoginForm();
+                    } else {
+                        this.showLoginError(data.error || 'Login failed');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    this.showLoginError('Network error. Please try again.');
+                }
+            }
+            
+            handleLogout() {
+                this.token = null;
+                localStorage.removeItem('admin_token');
+                this.showLogin();
+            }
+            
+            async loadInteractions() {
+                try {
+                    const response = await fetch('/api/admin/interactions', {
+                        headers: {
+                            'Authorization': `Bearer ${this.token}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.interactions = data.interactions;
+                        this.analytics = data.analytics;
+                        this.updateDashboard();
+                    } else {
+                        if (response.status === 401) {
+                            this.handleLogout();
+                        } else {
+                            this.showError('Failed to load interactions');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error loading interactions:', error);
+                    this.showError('Network error. Please try again.');
+                }
+            }
+            
+            updateDashboard() {
+                // Update stats
+                document.getElementById('totalReports').textContent = this.analytics.totalReports || 0;
+                document.getElementById('avgProcessingTime').textContent = this.analytics.avgProcessingTime || 0;
+                
+                // Calculate total tests
+                const totalTests = this.interactions.reduce((sum, interaction) => {
+                    return sum + (interaction.responseJSON.explanations?.length || 0);
+                }, 0);
+                document.getElementById('totalTests').textContent = totalTests;
+                
+                // Update common tests
+                this.updateCommonTests();
+                
+                // Update interactions list
+                this.updateInteractionsList();
+            }
+            
+            updateCommonTests() {
+                const commonTestsContainer = document.getElementById('commonTests');
+                const tests = this.analytics.commonTests || [];
+                
+                if (tests.length === 0) {
+                    commonTestsContainer.innerHTML = '<p class="text-muted">No test data available</p>';
+                    return;
+                }
+                
+                const testsHTML = tests.map(test => `
+                    <div class="col-md-6 col-lg-4 mb-2">
+                        <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                            <span class="fw-medium">${test.test}</span>
+                            <span class="badge bg-primary">${test.count}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                commonTestsContainer.innerHTML = testsHTML;
+            }
+            
+            updateInteractionsList() {
+                if (this.interactions.length === 0) {
+                    this.interactionsList.innerHTML = '<p class="text-muted text-center">No interactions found</p>';
+                    return;
+                }
+                
+                const interactionsHTML = this.interactions.map((interaction, index) => `
+                    <div class="interaction-card">
+                        <div class="interaction-header">
+                            <div>
+                                <h6 class="mb-1">Interaction #${index + 1}</h6>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>
+                                    ${new Date(interaction.timestamp).toLocaleString()}
+                                </small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="adminDashboard.toggleDetails(${index})">
+                                    <i class="bi bi-eye me-1"></i>View Details
+                                </button>
+                                <span class="badge bg-info">
+                                    ${interaction.processingTime || 0}ms
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="interaction-details" id="details-${index}">
+                            <h6>Report Preview:</h6>
+                            <p class="text-muted small">${interaction.reportText}...</p>
+                            
+                            <h6>AI Response Summary:</h6>
+                            <p>${interaction.responseJSON.summary || 'No summary available'}</p>
+                            
+                            ${this.renderTestExplanations(interaction.responseJSON.explanations)}
+                        </div>
+                    </div>
+                `).join('');
+                
+                this.interactionsList.innerHTML = interactionsHTML;
+            }
+            
+            renderTestExplanations(explanations) {
+                if (!explanations || explanations.length === 0) {
+                    return '<p class="text-muted">No test explanations available</p>';
+                }
+                
+                const testsHTML = explanations.map(test => `
+                    <div class="border-start border-3 border-primary ps-3 mb-2">
+                        <strong>${test.test_name || 'Unknown Test'}</strong><br>
+                        <small class="text-muted">
+                            Result: ${test.result || 'N/A'} | 
+                            Status: ${test.status || 'Unknown'} | 
+                            Range: ${test.reference_range || 'N/A'}
+                        </small>
+                    </div>
+                `).join('');
+                
+                return `
+                    <h6>Test Results:</h6>
+                    ${testsHTML}
+                `;
+            }
+            
+            toggleDetails(index) {
+                const detailsElement = document.getElementById(`details-${index}`);
+                if (detailsElement.style.display === 'none' || !detailsElement.style.display) {
+                    detailsElement.style.display = 'block';
+                } else {
+                    detailsElement.style.display = 'none';
+                }
+            }
+            
+            exportData(format) {
+                if (format === 'json') {
+                    this.downloadJSON();
+                } else if (format === 'csv') {
+                    this.downloadCSV();
+                }
+            }
+            
+            downloadJSON() {
+                const dataStr = JSON.stringify({
+                    interactions: this.interactions,
+                    analytics: this.analytics,
+                    exportDate: new Date().toISOString()
+                }, null, 2);
+                
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `healthsense-interactions-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+            }
+            
+            downloadCSV() {
+                if (this.interactions.length === 0) {
+                    alert('No data to export');
+                    return;
+                }
+                
+                let csvContent = 'Timestamp,Processing Time (ms),Summary,Test Count\n';
+                
+                this.interactions.forEach(interaction => {
+                    const timestamp = new Date(interaction.timestamp).toLocaleString();
+                    const processingTime = interaction.processingTime || 0;
+                    const summary = (interaction.responseJSON.summary || '').replace(/"/g, '""');
+                    const testCount = interaction.responseJSON.explanations?.length || 0;
+                    
+                    csvContent += `"${timestamp}",${processingTime},"${summary}",${testCount}\n`;
+                });
+                
+                const dataBlob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `healthsense-interactions-${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+            }
+            
+            showLogin() {
+                this.loginSection.classList.remove('hidden');
+                this.dashboardSection.classList.add('hidden');
+            }
+            
+            showDashboard() {
+                this.loginSection.classList.add('hidden');
+                this.dashboardSection.classList.remove('hidden');
+            }
+            
+            showLoginError(message) {
+                this.loginError.textContent = message;
+                this.loginError.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    this.loginError.classList.add('hidden');
+                }, 5000);
+            }
+            
+            showError(message) {
+                alert(message);
+            }
+            
+            clearLoginForm() {
+                this.usernameInput.value = '';
+                this.passwordInput.value = '';
+                this.loginError.classList.add('hidden');
+            }
+        }
+        
+        // Initialize the dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.adminDashboard = new AdminDashboard();
+        });
+    </script>
+</body>
+</html>

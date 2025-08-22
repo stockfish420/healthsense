@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthSense - AI Lab Report Analysis</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #0D6EFD;
+            --secondary: #20C997;
+            --dark: #212529;
+            --light: #F8F9FA;
+            --text: #6C757D;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark);
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+            padding: 6rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+        }
+        
+        .chat-section {
+            padding: 4rem 0;
+            background: white;
+        }
+        
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .chat-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 2rem;
+            background: var(--light);
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 1rem 1.5rem;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .message.ai .message-content {
+            background: white;
+            color: var(--dark);
+            border: 1px solid #E9ECEF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .upload-zone {
+            border: 2px dashed #CED4DA;
+            border-radius: 15px;
+            padding: 3rem 2rem;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin: 2rem;
+        }
+        
+        .chat-input-container {
+            margin: 2rem;
+            padding: 0 2rem;
+        }
+        
+        .input-group {
+            width: 100%;
+        }
+        
+        .input-group .form-control {
+            border-right: none;
+        }
+        
+        .input-group .btn {
+            border-left: none;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--light);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #E9ECEF;
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .disclaimer {
+            background: #FFF3CD;
+            border: 1px solid #FFEAA7;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .chat-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">HealthSense</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#home">Home</a>
+                <a class="nav-link" href="#features">Health Assistant</a>
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+                <a class="nav-link" href="#contact">Contact</a>
+                <button class="btn btn-outline-primary btn-sm ms-3" onclick="logout()" style="border-radius: 20px; padding: 8px 16px;">
+                    <i class="bi bi-box-arrow-left me-1"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Clarity in Every Report & Question</h1>
+            <p>Upload your lab reports or ask health questions and get clear, patient-friendly explanations powered by AI. Understand your health data with confidence.</p>
+            <button class="btn btn-primary" onclick="scrollToChat()">Try Now</button>
+        </div>
+    </section>
+
+    <!-- Health Assistant Section -->
+    <section id="features" class="chat-section">
+        <div class="container">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2>AI Health Assistant</h2>
+                    <p class="mb-0">Upload lab reports or ask health questions</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome message -->
+                    <div class="message ai">
+                        <div class="message-content">
+                            <strong>HealthSense AI</strong><br>
+                            Hello! I'm here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.
+                            <div class="disclaimer">
+                                <strong>Disclaimer:</strong> This is for educational purposes only. Always consult your healthcare provider.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">
+                        📄
+                    </div>
+                    <h5>Upload Lab Report PDF</h5>
+                    <p class="text-muted">Drag & drop your PDF here or click to browse</p>
+                    <p class="text-muted small">Maximum file size: 10MB</p>
+                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="chat-input-container mt-4">
+                    <div class="input-group" style="width: 100%;">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Ask me about your lab results or any health questions..." style="border-radius: 12px 0 0 12px; border: 2px solid #E9ECEF; padding: 12px 20px; font-size: 16px; flex: 1; border-right: none;">
+                        <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()" style="border-radius: 0 12px 12px 0; padding: 12px 20px; background: var(--primary); border-color: var(--primary); border: 2px solid var(--primary); border-left: none;">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </div>
+                    <small class="text-muted mt-2 d-block text-center">You can ask general health questions or upload a PDF for lab report analysis</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 HealthSense | Privacy | Terms</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Initialize PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        class HealthSenseChat {
+            constructor() {
+                this.chatMessages = document.getElementById('chatMessages');
+                this.uploadZone = document.getElementById('uploadZone');
+                this.fileInput = document.getElementById('fileInput');
+                this.chatHistory = this.loadChatHistory();
+                
+                this.initializeEventListeners();
+                this.displayChatHistory();
+            }
+            
+            initializeEventListeners() {
+                // File upload events
+                this.uploadZone.addEventListener('click', () => this.fileInput.click());
+                this.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
+                
+                // Drag and drop events
+                this.uploadZone.addEventListener('dragover', (e) => this.handleDragOver(e));
+                this.uploadZone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                this.uploadZone.addEventListener('drop', (e) => this.handleDrop(e));
+            }
+            
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadZone.style.borderColor = '#0D6EFD';
+                this.uploadZone.style.background = '#F8F9FA';
+            }
+            
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadZone.style.borderColor = '#CED4DA';
+                this.uploadZone.style.background = 'white';
+            }
+            
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadZone.style.borderColor = '#CED4DA';
+                this.uploadZone.style.background = 'white';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.fileInput.files = files;
+                    this.handleFileUpload({ target: { files: files } });
+                }
+            }
+            
+            async handleFileUpload(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                // Validate file type
+                if (file.type !== 'application/pdf') {
+                    this.addErrorMessage('Please upload a PDF file. Other file types are not supported.');
+                    return;
+                }
+                
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    this.addErrorMessage('File size must be less than 10MB. Please compress your PDF or upload a smaller file.');
+                    return;
+                }
+                
+                // Add user message
+                this.addMessage('user', `Uploaded: ${file.name}`);
+                
+                // Show loading state
+                this.showTypingIndicator();
+                
+                try {
+                    // Extract text from PDF
+                    const text = await this.extractTextFromPDF(file);
+                    
+                    // Remove typing indicator
+                    this.removeTypingIndicator();
+                    
+                    // Add extracted text message
+                    this.addMessage('ai', 'I\'ve extracted the text from your lab report. Now analyzing with AI...', text);
+                    
+                    // Generate AI analysis
+                    await this.generateAIResponse(text);
+                    
+                } catch (error) {
+                    this.removeTypingIndicator();
+                    console.error('PDF processing error:', error);
+                    
+                    if (error.message.includes('Invalid PDF')) {
+                        this.addErrorMessage('The uploaded file appears to be corrupted or not a valid PDF. Please try uploading a different file.');
+                    } else {
+                        this.addErrorMessage('Sorry, I encountered an error while processing your PDF. Please try again or contact support if the problem persists.');
+                    }
+                }
+            }
+            
+            async extractTextFromPDF(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        try {
+                            const typedarray = new Uint8Array(e.target.result);
+                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                            
+                            if (!pdf || pdf.numPages === 0) {
+                                reject(new Error('Invalid PDF'));
+                                return;
+                            }
+                            
+                            let fullText = '';
+                            
+                            for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+                                const page = await pdf.getPage(i);
+                                const textContent = await page.getTextContent();
+                                const pageText = textContent.items.map(item => item.str).join(' ');
+                                fullText += pageText + '\n';
+                            }
+                            
+                            if (!fullText.trim()) {
+                                reject(new Error('Invalid PDF - No text content found'));
+                                return;
+                            }
+                            
+                            resolve(fullText.trim());
+                        } catch (error) {
+                            reject(new Error('Invalid PDF'));
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+            
+            async generateAIResponse(extractedText) {
+                try {
+                    // Show analysis progress
+                    this.showAnalysisProgress();
+                    
+                    // Call the backend API with timeout
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                    
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            reportText: extractedText
+                        }),
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error || `Server error: ${response.status}`);
+                    }
+
+                    const aiData = await response.json();
+                    
+                    // Remove progress indicator
+                    this.removeAnalysisProgress();
+                    
+                    // Format and display the AI response
+                    this.displayAIResponse(aiData);
+                    
+                } catch (error) {
+                    this.removeAnalysisProgress();
+                    console.error('API Error:', error);
+                    
+                    let errorMessage = '';
+                    let showRetry = true;
+                    
+                    if (error.name === 'AbortError') {
+                        errorMessage = 'The analysis is taking longer than expected. This might be due to a large report or high server load.';
+                    } else if (error.message.includes('Network') || error.message.includes('fetch')) {
+                        errorMessage = 'Network connection issue. Please check your internet connection and try again.';
+                    } else if (error.message.includes('Server error: 500')) {
+                        errorMessage = 'Server error occurred. Please try again in a moment.';
+                    } else if (error.message.includes('Server error: 400')) {
+                        errorMessage = 'Invalid request. Please ensure your PDF contains readable text.';
+                    } else {
+                        errorMessage = 'An unexpected error occurred. Please try again.';
+                    }
+                    
+                    this.addErrorMessage(errorMessage, showRetry);
+                }
+            }
+            
+            showAnalysisProgress() {
+                const progressDiv = document.createElement('div');
+                progressDiv.className = 'message ai analysis-progress';
+                progressDiv.id = 'analysisProgress';
+                
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                content.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <div class="spinner"></div>
+                        Analyzing your lab report with AI...
+                    </div>
+                `;
+                
+                progressDiv.appendChild(content);
+                
+                this.chatMessages.appendChild(progressDiv);
+                this.scrollToBottom();
+            }
+            
+            removeAnalysisProgress() {
+                const progressIndicator = document.getElementById('analysisProgress');
+                if (progressIndicator) {
+                    progressIndicator.remove();
+                }
+            }
+            
+            displayAIResponse(aiData) {
+                let formattedResponse = '';
+                
+                // Summary section
+                if (aiData.summary) {
+                    const summaryTitle = aiData.explanations && aiData.explanations.length > 0 ? '📊 Analysis Summary' : '💡 Answer';
+                    formattedResponse += `
+                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #0D6EFD;">
+                            <h6 style="margin: 0 0 0.5rem 0; color: #0D6EFD;">${summaryTitle}</h6>
+                            <p style="margin: 0;">${aiData.summary}</p>
+                        </div>
+                    `;
+                }
+                
+                // Key findings section
+                if (aiData.key_findings && aiData.key_findings.length > 0) {
+                    const findingsTitle = aiData.explanations && aiData.explanations.length > 0 ? '💡 Key Findings' : '📋 Key Points';
+                    formattedResponse += `
+                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #20C997;">
+                            <h6 style="margin: 0 0 0.5rem 0; color: #20C997;">${findingsTitle}</h6>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                ${aiData.key_findings.map(finding => `<li>${finding}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Test explanations section (only show for lab reports)
+                if (aiData.explanations && aiData.explanations.length > 0) {
+                    formattedResponse += `
+                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #0D6EFD;">
+                            <h6 style="margin: 0 0 0.5rem 0; color: #0D6EFD;">🧪 Test Results & Explanations</h6>
+                            ${aiData.explanations.map(test => this.formatTestItem(test)).join('')}
+                        </div>
+                    `;
+                }
+                
+                // Recommendations section
+                if (aiData.recommendations && aiData.recommendations.length > 0) {
+                    const recTitle = aiData.explanations && aiData.explanations.length > 0 ? '📋 Recommendations' : '💡 Suggestions';
+                    formattedResponse += `
+                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #20C997;">
+                            <h6 style="margin: 0 0 0.5rem 0; color: #20C997;">${recTitle}</h6>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                ${aiData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Disclaimer
+                const disclaimer = aiData.disclaimer || 'This explanation is for educational purposes only. Please consult your healthcare provider for medical advice.';
+                formattedResponse += `
+                    <div class="disclaimer">
+                        <strong>Disclaimer:</strong> ${disclaimer}
+                    </div>
+                `;
+                
+                this.addMessage('ai', formattedResponse);
+            }
+            
+            formatTestItem(test) {
+                const statusClass = this.getStatusClass(test.status);
+                return `
+                    <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <div style="font-weight: 600; color: #0D6EFD; margin-bottom: 0.5rem;">${test.test_name || 'Test'}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span><strong>Result:</strong> ${test.result || 'N/A'}</span>
+                            <span style="padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; ${statusClass}">${test.status || 'Unknown'}</span>
+                        </div>
+                        ${test.reference_range ? `<div><strong>Normal Range:</strong> ${test.reference_range}</div>` : ''}
+                        ${test.explanation ? `<div style="margin-top: 0.5rem; font-style: italic;">${test.explanation}</div>` : ''}
+                        ${test.interpretation ? `<div style="margin-top: 0.5rem; color: #666;">${test.interpretation}</div>` : ''}
+                    </div>
+                `;
+            }
+            
+            getStatusClass(status) {
+                if (!status) return 'background: #d4edda; color: #155724;';
+                const lowerStatus = status.toLowerCase();
+                if (lowerStatus.includes('high') || lowerStatus.includes('elevated')) return 'background: #f8d7da; color: #721c24;';
+                if (lowerStatus.includes('low') || lowerStatus.includes('decreased')) return 'background: #fff3cd; color: #856404;';
+                return 'background: #d4edda; color: #155724;';
+            }
+            
+            addErrorMessage(message, showRetry = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                messageContent.innerHTML = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 10px; padding: 1rem; margin: 0.5rem 0; color: #721c24;">
+                        <strong>Error:</strong> ${message}
+                        ${showRetry ? '<br><button onclick="window.healthSenseChat.retryLastOperation()" style="background: #20C997; border: none; color: white; padding: 0.5rem 1rem; border-radius: 8px; margin-top: 0.5rem; cursor: pointer;">🔄 Try Again</button>' : ''}
+                    </div>
+                `;
+                
+                messageDiv.appendChild(messageContent);
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                // Save to chat history
+                this.saveMessage('ai', message, null, 'error');
+            }
+            
+            retryLastOperation() {
+                // Remove the error message
+                const lastMessage = this.chatMessages.lastElementChild;
+                if (lastMessage) {
+                    lastMessage.remove();
+                }
+                
+                // Retry the file upload if we have a file
+                if (this.fileInput.files.length > 0) {
+                    this.handleFileUpload({ target: { files: this.fileInput.files } });
+                }
+            }
+            
+            addMessage(sender, content, extractedText = null, type = 'normal') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                messageContent.innerHTML = content;
+                
+                if (extractedText) {
+                    const textDiv = document.createElement('div');
+                    textDiv.style.cssText = 'background: #F8F9FA; border: 1px solid #E9ECEF; border-radius: 10px; padding: 1rem; margin-top: 0.5rem; font-family: "Courier New", monospace; font-size: 0.85rem; max-height: 200px; overflow-y: auto; white-space: pre-wrap;';
+                    textDiv.textContent = extractedText;
+                    messageContent.appendChild(textDiv);
+                }
+                
+                messageDiv.appendChild(messageContent);
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                // Save to chat history
+                this.saveMessage(sender, content, extractedText, type);
+            }
+            
+            showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai typing-indicator-message';
+                typingDiv.id = 'typingIndicator';
+                
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                content.innerHTML = '<div style="display: flex; align-items: center; gap: 0.25rem; padding: 0.5rem 1rem;"><div class="spinner"></div> Processing your PDF...</div>';
+                
+                typingDiv.appendChild(content);
+                
+                this.chatMessages.appendChild(typingDiv);
+                this.scrollToBottom();
+            }
+            
+            removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            scrollToBottom() {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+            
+            saveMessage(sender, content, extractedText = null, type = 'normal') {
+                const message = {
+                    sender,
+                    content,
+                    extractedText,
+                    type,
+                    timestamp: new Date().toISOString()
+                };
+                
+                this.chatHistory.push(message);
+                sessionStorage.setItem('healthsense_chat_history', JSON.stringify(this.chatHistory));
+            }
+            
+            loadChatHistory() {
+                const saved = sessionStorage.getItem('healthsense_chat_history');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            displayChatHistory() {
+                this.chatHistory.forEach(msg => {
+                    if (msg.type === 'error') {
+                        this.addErrorMessage(msg.content, false);
+                    } else {
+                        this.addMessage(msg.sender, msg.content, msg.extractedText);
+                    }
+                });
+            }
+        }
+        
+        // Initialize the chat when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.healthSenseChat = new HealthSenseChat();
+        });
+        
+        function scrollToChat() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Send text message function
+        async function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message to chat
+            window.healthSenseChat.addMessage('user', message);
+            messageInput.value = '';
+            
+            // Show typing indicator
+            window.healthSenseChat.showTypingIndicator();
+            
+            try {
+                // Send message to backend for analysis
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reportText: `User question: ${message}`
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hide typing indicator
+                window.healthSenseChat.removeTypingIndicator();
+                
+                // Display AI response
+                window.healthSenseChat.displayAIResponse(data);
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                window.healthSenseChat.removeTypingIndicator();
+                window.healthSenseChat.addErrorMessage('Sorry, I encountered an error processing your question. Please try again.');
+            }
+        }
+        
+        // Handle Enter key press in message input
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
+        
+        // Logout function
+        function logout() {
+            // Clear any stored data
+            sessionStorage.removeItem('healthsense_chat_history');
+            localStorage.removeItem('admin_token');
+            
+            // Show logout message
+            alert('You have been logged out successfully.');
+            
+            // Optionally redirect to home or refresh
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
