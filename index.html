@@ -21,19 +21,49 @@
             --dark: #212529;
             --light: #F8F9FA;
             --text: #6C757D;
+            
+            /* Light theme colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --chat-bg: #ffffff;
+            --message-ai-bg: #f8f9fa;
+            --message-user-bg: #e3f2fd;
+            --card-bg: #ffffff;
+            --input-bg: #ffffff;
+            --input-border: #dee2e6;
+        }
+        
+        /* Dark theme colors */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --chat-bg: #2d2d2d;
+            --message-ai-bg: #404040;
+            --message-user-bg: #1e3a5f;
+            --card-bg: #2d2d2d;
+            --input-bg: #404040;
+            --input-border: #555555;
         }
         
         body {
             font-family: 'Inter', sans-serif;
-            background: white;
-            color: var(--dark);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .navbar {
-            background: white;
+            background: var(--bg-primary);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             padding: 1rem 0;
+            transition: background-color 0.3s ease;
         }
         
         .navbar-brand {
@@ -44,7 +74,7 @@
         
         .nav-link {
             font-weight: 500;
-            color: var(--dark);
+            color: var(--text-primary);
             margin: 0 1rem;
             transition: color 0.3s ease;
         }
@@ -54,21 +84,22 @@
         }
         
         .hero {
-            background: linear-gradient(135deg, var(--light) 0%, white 100%);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
             padding: 6rem 0;
             text-align: center;
+            transition: background 0.3s ease;
         }
         
         .hero h1 {
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            color: var(--dark);
+            color: var(--text-primary);
         }
         
         .hero p {
             font-size: 1.25rem;
-            color: var(--text);
+            color: var(--text-secondary);
             margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
@@ -92,16 +123,18 @@
         
         .chat-section {
             padding: 4rem 0;
-            background: white;
+            background: var(--bg-primary);
+            transition: background-color 0.3s ease;
         }
         
         .chat-container {
             max-width: 800px;
             margin: 0 auto;
-            background: white;
+            background: var(--chat-bg);
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
         
         .chat-header {
@@ -120,7 +153,7 @@
             height: 400px;
             overflow-y: auto;
             padding: 2rem;
-            background: var(--light);
+            background: var(--bg-secondary);
         }
         
         .message {
@@ -146,21 +179,23 @@
         }
         
         .message.ai .message-content {
-            background: white;
-            color: var(--dark);
-            border: 1px solid #E9ECEF;
+            background: var(--message-ai-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
-        .upload-zone {
-            border: 2px dashed #CED4DA;
-            border-radius: 15px;
-            padding: 3rem 2rem;
-            text-align: center;
-            background: white;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            margin: 2rem;
+        .attachment-btn {
+            background: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+        
+        .attachment-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
         }
         
         .chat-input-container {
@@ -174,6 +209,13 @@
         
         .input-group .form-control {
             border-right: none;
+            background: var(--input-bg);
+            border-color: var(--input-border);
+            color: var(--text-primary);
+        }
+        
+        .input-group .form-control::placeholder {
+            color: var(--text-secondary);
         }
         
         .input-group .btn {
@@ -192,11 +234,12 @@
         }
         
         .footer {
-            background: var(--dark);
-            color: white;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             text-align: center;
             padding: 2rem 0;
             margin-top: 4rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .spinner {
@@ -214,13 +257,67 @@
         }
         
         .disclaimer {
-            background: #FFF3CD;
-            border: 1px solid #FFEAA7;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 1rem;
             margin-top: 1rem;
             font-size: 0.9rem;
-            color: #856404;
+            color: var(--text-primary);
+        }
+        
+        /* AI Response Card Styling */
+        .ai-response-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+        
+        .ai-response-card h6 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .ai-response-card p,
+        .ai-response-card li {
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .ai-response-card ul {
+            color: var(--text-primary);
+        }
+        
+        /* Test item styling */
+        .test-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .test-item .test-name {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .test-item .test-details {
+            color: var(--text-primary);
+        }
+        
+        .test-item .test-explanation {
+            color: var(--text-primary);
+            font-style: italic;
+        }
+        
+        .test-item .test-interpretation {
+            color: var(--text-secondary);
         }
         
         @media (max-width: 768px) {
@@ -249,8 +346,9 @@
                 <a class="nav-link" href="#features">Health Assistant</a>
                 <a class="nav-link" href="dashboard.html">Dashboard</a>
                 <a class="nav-link" href="#contact">Contact</a>
-                <button class="btn btn-outline-primary btn-sm ms-3" onclick="logout()" style="border-radius: 20px; padding: 8px 16px;">
-                    <i class="bi bi-box-arrow-left me-1"></i>Logout
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="btn btn-outline-secondary btn-sm ms-3" onclick="toggleTheme()" title="Toggle Dark/Light Theme" style="border-radius: 20px; padding: 8px 16px;">
+                    <i class="bi bi-moon-fill" id="themeIcon"></i>
                 </button>
             </div>
         </div>
@@ -287,24 +385,33 @@
                     </div>
                 </div>
                 
-                <div class="upload-zone" id="uploadZone">
-                    <div class="upload-icon">
-                        📄
-                    </div>
-                    <h5>Upload Lab Report PDF</h5>
-                    <p class="text-muted">Drag & drop your PDF here or click to browse</p>
-                    <p class="text-muted small">Maximum file size: 10MB</p>
-                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
-                </div>
+                
                 
                 <!-- Chat Input -->
                 <div class="chat-input-container mt-4">
-                    <div class="input-group" style="width: 100%;">
-                        <input type="text" id="messageInput" class="form-control" placeholder="Ask me about your lab results or any health questions..." style="border-radius: 12px 0 0 12px; border: 2px solid #E9ECEF; padding: 12px 20px; font-size: 16px; flex: 1; border-right: none;">
-                        <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()" style="border-radius: 0 12px 12px 0; padding: 12px 20px; background: var(--primary); border-color: var(--primary); border: 2px solid var(--primary); border-left: none;">
+                    <!-- Clear Chat Button -->
+                    <div class="text-end mb-2">
+                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="clearConversation()" style="font-size: 0.9rem;">
+                            <i class="bi bi-trash"></i> Clear Chat
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="clearStorage()" style="font-size: 0.9rem;" title="Clear all stored data if experiencing issues">
+                            <i class="bi bi-database-x"></i> Clear Storage
+                        </button>
+                    </div>
+                    
+                    <div class="input-group" style="width: 100%; align-items: stretch;">
+                        <!-- Attachment Button -->
+                        <button class="btn btn-outline-secondary attachment-btn" onclick="triggerFileUpload()" title="Attach PDF" style="border-radius: 12px 0 0 12px; border: 2px solid #E9ECEF; padding: 12px 15px; border-right: none; display: flex; align-items: center; height: auto;">
+                            <i class="bi bi-paperclip"></i>
+                            <small class="ms-1 d-none d-sm-inline" style="font-size: 0.75rem; color: #6c757d;">PDF</small>
+                        </button>
+                        <input type="text" id="messageInput" class="form-control" placeholder="Ask me about your lab results or any health questions..." style="border-radius: 0; border: 2px solid #E9ECEF; padding: 12px 20px; font-size: 16px; flex: 1; border-left: none; border-right: none; height: auto;">
+                        <button class="btn btn-primary" id="sendBtn" onclick="sendMessage()" style="border-radius: 0 12px 12px 0; padding: 12px 20px; background: var(--primary); border-color: var(--primary); border: 2px solid var(--primary); border-left: none; display: flex; align-items: center; height: auto;">
                             <i class="bi bi-send-fill"></i>
                         </button>
                     </div>
+                    <!-- Hidden file input -->
+                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
                     <small class="text-muted mt-2 d-block text-center">You can ask general health questions or upload a PDF for lab report analysis</small>
                 </div>
             </div>
@@ -326,97 +433,142 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
         class HealthSenseChat {
-            constructor() {
-                this.chatMessages = document.getElementById('chatMessages');
-                this.uploadZone = document.getElementById('uploadZone');
-                this.fileInput = document.getElementById('fileInput');
-                this.chatHistory = this.loadChatHistory();
-                
-                this.initializeEventListeners();
-                this.displayChatHistory();
+                         constructor() {
+                 this.chatMessages = document.getElementById('chatMessages');
+                 this.fileInput = document.getElementById('fileInput');
+                 
+                 // Initialize with error handling
+                 this.initializeStorage();
+                 
+                 this.initializeEventListeners();
+                 this.displayChatHistory();
+             }
+            
+            initializeStorage() {
+                try {
+                    this.chatHistory = this.loadChatHistory();
+                    this.currentReportContext = this.loadReportContext();
+                    this.conversationId = this.generateConversationId();
+                } catch (error) {
+                    console.warn('Storage initialization failed, starting fresh:', error);
+                    this.chatHistory = [];
+                    this.currentReportContext = null;
+                    this.conversationId = this.generateConversationId();
+                }
+            }
+            
+            clearStorageIfNeeded() {
+                try {
+                    // Check if localStorage is getting full
+                    const testKey = 'healthsense_storage_test';
+                    const testValue = 'x'.repeat(1024 * 1024); // 1MB test
+                    localStorage.setItem(testKey, testValue);
+                    localStorage.removeItem(testKey);
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        console.warn('LocalStorage is full, clearing old data');
+                        this.clearOldData();
+                    }
+                }
+            }
+            
+            clearOldData() {
+                try {
+                    // Keep only the most recent 20 messages
+                    if (this.chatHistory.length > 20) {
+                        this.chatHistory = this.chatHistory.slice(-20);
+                        localStorage.setItem('healthsense_chat_history', JSON.stringify(this.chatHistory));
+                    }
+                    
+                    // Clear report context if it's too large
+                    if (this.currentReportContext && this.currentReportContext.extractedText) {
+                        if (this.currentReportContext.extractedText.length > 500) {
+                            this.currentReportContext.extractedText = this.currentReportContext.extractedText.substring(0, 500) + '...';
+                            localStorage.setItem('healthsense_report_context', JSON.stringify(this.currentReportContext));
+                        }
+                    }
+                } catch (error) {
+                    console.warn('Failed to clear old data:', error);
+                }
             }
             
             initializeEventListeners() {
                 // File upload events
-                this.uploadZone.addEventListener('click', () => this.fileInput.click());
                 this.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
                 
-                // Drag and drop events
-                this.uploadZone.addEventListener('dragover', (e) => this.handleDragOver(e));
-                this.uploadZone.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-                this.uploadZone.addEventListener('drop', (e) => this.handleDrop(e));
-            }
-            
-            handleDragOver(e) {
-                e.preventDefault();
-                this.uploadZone.style.borderColor = '#0D6EFD';
-                this.uploadZone.style.background = '#F8F9FA';
-            }
-            
-            handleDragLeave(e) {
-                e.preventDefault();
-                this.uploadZone.style.borderColor = '#CED4DA';
-                this.uploadZone.style.background = 'white';
-            }
-            
-            handleDrop(e) {
-                e.preventDefault();
-                this.uploadZone.style.borderColor = '#CED4DA';
-                this.uploadZone.style.background = 'white';
-                
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    this.fileInput.files = files;
-                    this.handleFileUpload({ target: { files: files } });
-                }
-            }
-            
-            async handleFileUpload(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                // Validate file type
-                if (file.type !== 'application/pdf') {
-                    this.addErrorMessage('Please upload a PDF file. Other file types are not supported.');
-                    return;
-                }
-                
-                // Validate file size (10MB limit)
-                if (file.size > 10 * 1024 * 1024) {
-                    this.addErrorMessage('File size must be less than 10MB. Please compress your PDF or upload a smaller file.');
-                    return;
-                }
-                
-                // Add user message
-                this.addMessage('user', `Uploaded: ${file.name}`);
-                
-                // Show loading state
-                this.showTypingIndicator();
-                
-                try {
-                    // Extract text from PDF
-                    const text = await this.extractTextFromPDF(file);
-                    
-                    // Remove typing indicator
-                    this.removeTypingIndicator();
-                    
-                    // Add extracted text message
-                    this.addMessage('ai', 'I\'ve extracted the text from your lab report. Now analyzing with AI...', text);
-                    
-                    // Generate AI analysis
-                    await this.generateAIResponse(text);
-                    
-                } catch (error) {
-                    this.removeTypingIndicator();
-                    console.error('PDF processing error:', error);
-                    
-                    if (error.message.includes('Invalid PDF')) {
-                        this.addErrorMessage('The uploaded file appears to be corrupted or not a valid PDF. Please try uploading a different file.');
-                    } else {
-                        this.addErrorMessage('Sorry, I encountered an error while processing your PDF. Please try again or contact support if the problem persists.');
+                // Message input enter key
+                const messageInput = document.getElementById('messageInput');
+                messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
                     }
-                }
+                });
+                
+                // Drag and drop on entire chat area
+                const chatContainer = document.querySelector('.chat-container');
+                chatContainer.addEventListener('dragover', (e) => this.handleDragOver(e));
+                chatContainer.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                chatContainer.addEventListener('drop', (e) => this.handleDrop(e));
             }
+            
+
+            
+                         async handleFileUpload(e) {
+                 const file = e.target.files[0];
+                 if (!file) return;
+                 
+                 // Validate file type
+                 if (file.type !== 'application/pdf') {
+                     this.addErrorMessage('Please upload a PDF file. Other file types are not supported.');
+                     return;
+                 }
+                 
+                 // Validate file size (10MB limit)
+                 if (file.size > 10 * 1024 * 1024) {
+                     this.addErrorMessage('File size must be less than 10MB. Please compress your PDF or upload a smaller file.');
+                     return;
+                 }
+                 
+
+                 
+                 // Add user message
+                 this.addMessage('user', `📄 Uploaded: ${file.name}`);
+                 
+                 // Show loading state
+                 this.showTypingIndicator();
+                 
+                 try {
+                     // Extract text from PDF
+                     const text = await this.extractTextFromPDF(file);
+                     
+                     // Save report context for future questions
+                     this.saveReportContext({
+                         fileName: file.name,
+                         fileSize: file.size,
+                         uploadTime: new Date().toISOString(),
+                         extractedText: text.substring(0, 1000) // Store first 1000 chars for context
+                     });
+                     
+                     // Remove typing indicator
+                     this.removeTypingIndicator();
+                     
+                     // Add extracted text message
+                     this.addMessage('ai', 'I\'ve extracted the text from your lab report. Now analyzing with AI...', text);
+                     
+                     // Generate AI analysis
+                     await this.generateAIResponse(text);
+                     
+                 } catch (error) {
+                     this.removeTypingIndicator();
+                     console.error('PDF processing error:', error);
+                     
+                     if (error.message.includes('Invalid PDF')) {
+                         this.addErrorMessage('The uploaded file appears to be corrupted or not a valid PDF. Please try uploading a different file.');
+                     } else {
+                         this.addErrorMessage('Sorry, I encountered an error while processing your PDF. Please try again or contact support if the problem persists.');
+                     }
+                 }
+             }
             
             async extractTextFromPDF(file) {
                 return new Promise((resolve, reject) => {
@@ -546,43 +698,43 @@
                 if (aiData.summary) {
                     const summaryTitle = aiData.explanations && aiData.explanations.length > 0 ? '📊 Analysis Summary' : '💡 Answer';
                     formattedResponse += `
-                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #0D6EFD;">
+                        <div style="margin: 1rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: 10px; border-left: 4px solid #0D6EFD;">
                             <h6 style="margin: 0 0 0.5rem 0; color: #0D6EFD;">${summaryTitle}</h6>
-                            <p style="margin: 0;">${aiData.summary}</p>
+                            <p style="margin: 0; color: var(--text-primary);">${aiData.summary}</p>
                         </div>
                     `;
                 }
                 
-                // Key findings section
+                // Key findings section (only show if there are actual findings)
                 if (aiData.key_findings && aiData.key_findings.length > 0) {
                     const findingsTitle = aiData.explanations && aiData.explanations.length > 0 ? '💡 Key Findings' : '📋 Key Points';
                     formattedResponse += `
-                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #20C997;">
+                        <div style="margin: 1rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: 10px; border-left: 4px solid #20C997;">
                             <h6 style="margin: 0 0 0.5rem 0; color: #20C997;">${findingsTitle}</h6>
-                            <ul style="margin: 0; padding-left: 1.5rem;">
+                            <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-primary);">
                                 ${aiData.key_findings.map(finding => `<li>${finding}</li>`).join('')}
                             </ul>
                         </div>
                     `;
                 }
                 
-                // Test explanations section (only show for lab reports)
+                // Test explanations section (only show for lab reports with actual explanations)
                 if (aiData.explanations && aiData.explanations.length > 0) {
                     formattedResponse += `
-                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #0D6EFD;">
+                        <div style="margin: 1rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: 10px; border-left: 4px solid #0D6EFD;">
                             <h6 style="margin: 0 0 0.5rem 0; color: #0D6EFD;">🧪 Test Results & Explanations</h6>
                             ${aiData.explanations.map(test => this.formatTestItem(test)).join('')}
                         </div>
                     `;
                 }
                 
-                // Recommendations section
+                // Recommendations section (only show if there are actual recommendations)
                 if (aiData.recommendations && aiData.recommendations.length > 0) {
                     const recTitle = aiData.explanations && aiData.explanations.length > 0 ? '📋 Recommendations' : '💡 Suggestions';
                     formattedResponse += `
-                        <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #20C997;">
+                        <div style="margin: 1rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: 10px; border-left: 4px solid #20C997;">
                             <h6 style="margin: 0 0 0.5rem 0; color: #20C997;">${recTitle}</h6>
-                            <ul style="margin: 0; padding-left: 1.5rem;">
+                            <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-primary);">
                                 ${aiData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
                             </ul>
                         </div>
@@ -603,15 +755,15 @@
             formatTestItem(test) {
                 const statusClass = this.getStatusClass(test.status);
                 return `
-                    <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; margin: 0.5rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; margin: 0.5rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                         <div style="font-weight: 600; color: #0D6EFD; margin-bottom: 0.5rem;">${test.test_name || 'Test'}</div>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                            <span><strong>Result:</strong> ${test.result || 'N/A'}</span>
+                            <span style="color: var(--text-primary);"><strong>Result:</strong> ${test.result || 'N/A'}</span>
                             <span style="padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; ${statusClass}">${test.status || 'Unknown'}</span>
                         </div>
-                        ${test.reference_range ? `<div><strong>Normal Range:</strong> ${test.reference_range}</div>` : ''}
-                        ${test.explanation ? `<div style="margin-top: 0.5rem; font-style: italic;">${test.explanation}</div>` : ''}
-                        ${test.interpretation ? `<div style="margin-top: 0.5rem; color: #666;">${test.interpretation}</div>` : ''}
+                        ${test.reference_range ? `<div style="color: var(--text-primary);"><strong>Normal Range:</strong> ${test.reference_range}</div>` : ''}
+                        ${test.explanation ? `<div style="margin-top: 0.5rem; font-style: italic; color: var(--text-primary);">${test.explanation}</div>` : ''}
+                        ${test.interpretation ? `<div style="margin-top: 0.5rem; color: var(--text-secondary);">${test.interpretation}</div>` : ''}
                     </div>
                 `;
             }
@@ -669,7 +821,7 @@
                 
                 if (extractedText) {
                     const textDiv = document.createElement('div');
-                    textDiv.style.cssText = 'background: #F8F9FA; border: 1px solid #E9ECEF; border-radius: 10px; padding: 1rem; margin-top: 0.5rem; font-family: "Courier New", monospace; font-size: 0.85rem; max-height: 200px; overflow-y: auto; white-space: pre-wrap;';
+                    textDiv.style.cssText = `background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; margin-top: 0.5rem; font-family: "Courier New", monospace; font-size: 0.85rem; max-height: 200px; overflow-y: auto; white-space: pre-wrap; color: var(--text-primary);`;
                     textDiv.textContent = extractedText;
                     messageContent.appendChild(textDiv);
                 }
@@ -715,32 +867,209 @@
                     content,
                     extractedText,
                     type,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    conversationId: this.conversationId,
+                    reportContext: this.currentReportContext ? this.currentReportContext.fileName : null
                 };
                 
                 this.chatHistory.push(message);
-                sessionStorage.setItem('healthsense_chat_history', JSON.stringify(this.chatHistory));
+                
+                // Clean up old messages if storage is getting full
+                this.cleanupChatHistory();
+                
+                try {
+                    localStorage.setItem('healthsense_chat_history', JSON.stringify(this.chatHistory));
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        // If storage is full, remove oldest messages and try again
+                        this.cleanupChatHistory(true);
+                        try {
+                            localStorage.setItem('healthsense_chat_history', JSON.stringify(this.chatHistory));
+                        } catch (retryError) {
+                            console.warn('Failed to save chat history after cleanup:', retryError);
+                        }
+                    }
+                }
+            }
+            
+            cleanupChatHistory(forceCleanup = false) {
+                const maxMessages = 50; // Keep only last 50 messages
+                const maxHistorySize = 5 * 1024 * 1024; // 5MB limit
+                
+                if (forceCleanup || this.chatHistory.length > maxMessages) {
+                    // Remove oldest messages, keeping the most recent ones
+                    this.chatHistory = this.chatHistory.slice(-maxMessages);
+                }
+                
+                // If still too large, truncate content
+                if (this.chatHistory.length > 0) {
+                    const historyString = JSON.stringify(this.chatHistory);
+                    if (historyString.length > maxHistorySize) {
+                        // Remove extracted text from older messages to save space
+                        this.chatHistory.forEach(msg => {
+                            if (msg.extractedText && msg.extractedText.length > 200) {
+                                msg.extractedText = msg.extractedText.substring(0, 200) + '...';
+                            }
+                        });
+                    }
+                }
             }
             
             loadChatHistory() {
-                const saved = sessionStorage.getItem('healthsense_chat_history');
-                return saved ? JSON.parse(saved) : [];
+                try {
+                    const saved = localStorage.getItem('healthsense_chat_history');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (Array.isArray(parsed)) {
+                            this.chatHistory = parsed;
+                        } else {
+                            this.chatHistory = [];
+                        }
+                    } else {
+                        this.chatHistory = [];
+                    }
+                } catch (error) {
+                    console.warn('Failed to load chat history:', error);
+                    this.chatHistory = [];
+                    // Clear corrupted data
+                    try {
+                        localStorage.removeItem('healthsense_chat_history');
+                    } catch (clearError) {
+                        console.warn('Failed to clear corrupted chat history:', clearError);
+                    }
+                }
+            }
+            
+            loadReportContext() {
+                try {
+                    const saved = localStorage.getItem('healthsense_report_context');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        if (parsed && typeof parsed === 'object') {
+                            return parsed;
+                        }
+                    }
+                    return null;
+                } catch (error) {
+                    console.warn('Failed to load report context:', error);
+                    // Clear corrupted data
+                    try {
+                        localStorage.removeItem('healthsense_report_context');
+                    } catch (clearError) {
+                        console.warn('Failed to clear corrupted report context:', clearError);
+                    }
+                    return null;
+                }
+            }
+            
+            saveReportContext(context) {
+                this.currentReportContext = context;
+                try {
+                    localStorage.setItem('healthsense_report_context', JSON.stringify(context));
+                } catch (error) {
+                    console.warn('Failed to save report context:', error);
+                    // If storage is full, try to clear some space
+                    try {
+                        localStorage.removeItem('healthsense_chat_history');
+                        localStorage.setItem('healthsense_report_context', JSON.stringify(context));
+                    } catch (retryError) {
+                        console.warn('Failed to save report context after cleanup:', retryError);
+                    }
+                }
+            }
+            
+            generateConversationId() {
+                try {
+                    const saved = localStorage.getItem('healthsense_conversation_id');
+                    if (saved) return saved;
+                    
+                    const newId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('healthsense_conversation_id', newId);
+                    return newId;
+                } catch (error) {
+                    console.warn('Failed to generate conversation ID:', error);
+                    // Generate ID without localStorage
+                    return 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                }
             }
             
             displayChatHistory() {
-                this.chatHistory.forEach(msg => {
-                    if (msg.type === 'error') {
-                        this.addErrorMessage(msg.content, false);
-                    } else {
-                        this.addMessage(msg.sender, msg.content, msg.extractedText);
+                try {
+                    if (this.chatHistory && this.chatHistory.length > 0) {
+                        this.chatHistory.forEach(msg => {
+                            try {
+                                if (msg.type === 'error') {
+                                    this.addErrorMessage(msg.content, false);
+                                } else {
+                                    this.addMessage(msg.sender, msg.content, msg.extractedText);
+                                }
+                            } catch (msgError) {
+                                console.warn('Failed to display message:', msgError);
+                            }
+                        });
                     }
-                });
+                } catch (error) {
+                    console.warn('Failed to display chat history:', error);
+                    // Add a fresh welcome message
+                    this.addMessage('ai', 'Hello! I\'m here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.');
+                }
             }
+            
+            
+             
+             clearConversation() {
+                 // Clear chat history
+                 this.chatHistory = [];
+                 
+                 // Clear report context
+                 this.currentReportContext = null;
+                 
+                 // Generate new conversation ID
+                 this.conversationId = this.generateConversationId();
+                 
+                 // Clear localStorage
+                 try {
+                     localStorage.removeItem('healthsense_chat_history');
+                     localStorage.removeItem('healthsense_report_context');
+                     localStorage.removeItem('healthsense_conversation_id');
+                 } catch (error) {
+                     console.warn('Failed to clear localStorage:', error);
+                 }
+                 
+                 // Clear chat display
+                 this.chatMessages.innerHTML = '';
+                 
+                 // Add welcome message
+                 this.addMessage('ai', 'Hello! I\'m here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.');
+             }
         }
         
         // Initialize the chat when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            window.healthSenseChat = new HealthSenseChat();
+            try {
+                window.healthSenseChat = new HealthSenseChat();
+                // Check storage health
+                if (window.healthSenseChat) {
+                    window.healthSenseChat.clearStorageIfNeeded();
+                }
+            } catch (error) {
+                console.error('Failed to initialize HealthSense chat:', error);
+                // Show error message to user
+                const chatMessages = document.getElementById('chatMessages');
+                if (chatMessages) {
+                    chatMessages.innerHTML = `
+                        <div class="message ai">
+                            <div class="message-content">
+                                <strong>HealthSense AI</strong><br>
+                                Hello! I\'m here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.
+                                <div class="disclaimer">
+                                    <strong>Disclaimer:</strong> This is for educational purposes only. Always consult your healthcare provider.
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
         });
         
         function scrollToChat() {
@@ -762,6 +1091,23 @@
             window.healthSenseChat.showTypingIndicator();
             
             try {
+                // Prepare the message with context if available
+                let messageText = `User question: ${message}`;
+                
+                // If we have a report context, include it for better AI responses
+                if (window.healthSenseChat.currentReportContext) {
+                    // Include the actual extracted text from the report for context
+                    const reportContext = window.healthSenseChat.currentReportContext;
+                    messageText = `Context: You are analyzing a lab report titled "${reportContext.fileName}" uploaded on ${new Date(reportContext.uploadTime).toLocaleDateString()}. 
+
+REPORT CONTENT (first 1000 characters):
+${reportContext.extractedText}
+
+USER QUESTION: ${message}
+
+IMPORTANT: Use the actual report content above to provide specific, relevant answers. Reference specific test values, ranges, and findings from the report when answering.`;
+                }
+                
                 // Send message to backend for analysis
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
@@ -769,7 +1115,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        reportText: `User question: ${message}`
+                        reportText: messageText
                     })
                 });
                 
@@ -804,18 +1150,73 @@
             }
         });
         
-        // Logout function
-        function logout() {
-            // Clear any stored data
-            sessionStorage.removeItem('healthsense_chat_history');
-            localStorage.removeItem('admin_token');
-            
-            // Show logout message
-            alert('You have been logged out successfully.');
-            
-            // Optionally redirect to home or refresh
-            window.location.reload();
+
+        // Clear conversation function
+        function clearConversation() {
+            if (window.healthSenseChat) {
+                window.healthSenseChat.clearConversation();
+            }
         }
+        
+        // Clear all storage function
+        function clearStorage() {
+            try {
+                // Clear all localStorage items
+                localStorage.clear();
+                
+                // Reload the page to start fresh
+                if (confirm('All stored data has been cleared. The page will reload to start fresh. Continue?')) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Failed to clear storage:', error);
+                alert('Failed to clear storage. Please try refreshing the page.');
+            }
+        }
+        
+        // Global function to trigger file upload
+        function triggerFileUpload() {
+            document.getElementById('fileInput').click();
+        }
+        
+        // Theme toggle functionality
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            try {
+                if (currentTheme === 'dark') {
+                    body.removeAttribute('data-theme');
+                    themeIcon.className = 'bi bi-moon-fill';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    themeIcon.className = 'bi bi-sun-fill';
+                    localStorage.setItem('theme', 'dark');
+                }
+            } catch (error) {
+                console.warn('Failed to save theme preference:', error);
+            }
+        }
+        
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const savedTheme = localStorage.getItem('theme');
+                const themeIcon = document.getElementById('themeIcon');
+                
+                if (savedTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    if (themeIcon) themeIcon.className = 'bi bi-sun-fill';
+                } else {
+                    document.body.removeAttribute('data-theme');
+                    if (themeIcon) themeIcon.className = 'bi bi-moon-fill';
+                }
+            } catch (error) {
+                console.warn('Failed to load theme preference:', error);
+            }
+        });
     </script>
 </body>
 </html>

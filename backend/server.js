@@ -110,7 +110,7 @@ app.post('/api/analyze', async (req, res) => {
 
 
     // Determine if this is a lab report or a general health question
-    const isLabReport = reportText.length > 200 && !reportText.startsWith('User question:');
+    const isLabReport = reportText.length > 200 && !reportText.startsWith('User question:') && !reportText.startsWith('Context:');
     
     let prompt;
     if (isLabReport) {
@@ -148,6 +148,34 @@ Return JSON format:
 }
 
 Lab report text: ${reportText}
+
+IMPORTANT: Return ONLY valid JSON. No additional text before or after.`;
+         } else if (reportText.startsWith('Context:')) {
+       // Follow-up question with report context prompt
+       prompt = `You are a medical education AI analyzing a specific lab report. The user has uploaded a lab report and is asking follow-up questions about it.
+
+SAFETY RULES:
+- NEVER diagnose or give medical advice
+- Use educational, reassuring language
+- Always recommend consulting healthcare provider
+- Reference specific test values and findings from the provided report
+- Use the actual report content to give relevant answers
+- Be specific about what the report shows
+
+IMPORTANT: You have access to the actual lab report content above. Use it to provide specific, relevant answers that reference the actual test values, ranges, and findings from the user's report.
+
+Return JSON format:
+{
+  "summary": "Direct answer to the user's question based on their lab report findings",
+  "explanations": [],
+  "key_findings": [
+    "List 2-3 key points from their actual lab report that relate to their question"
+  ],
+  "recommendations": [],
+  "disclaimer": "This explanation is for educational purposes only. Please consult your healthcare provider for medical advice."
+}
+
+${reportText}
 
 IMPORTANT: Return ONLY valid JSON. No additional text before or after.`;
     } else {
