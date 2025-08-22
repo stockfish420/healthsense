@@ -433,20 +433,36 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         
         class HealthSenseChat {
-                         constructor() {
-                 this.chatMessages = document.getElementById('chatMessages');
-                 this.fileInput = document.getElementById('fileInput');
-                 
-                 // Initialize with error handling
-                 this.initializeStorage();
-                 
-                 this.initializeEventListeners();
-                 this.displayChatHistory();
-             }
+            constructor() {
+                console.log('HealthSenseChat constructor called');
+                
+                // Ensure DOM elements exist before proceeding
+                this.chatMessages = document.getElementById('chatMessages');
+                this.fileInput = document.getElementById('fileInput');
+                
+                console.log('DOM elements found:', {
+                    chatMessages: this.chatMessages,
+                    fileInput: this.fileInput
+                });
+                
+                if (!this.chatMessages || !this.fileInput) {
+                    throw new Error('Required DOM elements not found. Make sure chatMessages and fileInput elements exist.');
+                }
+                
+                // Initialize with error handling
+                this.initializeStorage();
+                
+                this.initializeEventListeners();
+                this.displayChatHistory();
+                
+                console.log('HealthSenseChat constructor completed');
+            }
             
             initializeStorage() {
                 try {
+                    console.log('Initializing storage...');
                     this.chatHistory = this.loadChatHistory();
+                    console.log('Chat history loaded:', this.chatHistory);
                     this.currentReportContext = this.loadReportContext();
                     this.conversationId = this.generateConversationId();
                 } catch (error) {
@@ -455,6 +471,24 @@
                     this.currentReportContext = null;
                     this.conversationId = this.generateConversationId();
                 }
+                
+                // Ensure chatHistory is always an array
+                if (!Array.isArray(this.chatHistory)) {
+                    console.warn('chatHistory is not an array, fixing...', this.chatHistory);
+                    this.chatHistory = [];
+                }
+                if (!this.currentReportContext) {
+                    this.currentReportContext = null;
+                }
+                if (!this.conversationId) {
+                    this.conversationId = this.generateConversationId();
+                }
+                
+                console.log('Storage initialization complete:', {
+                    chatHistory: this.chatHistory,
+                    currentReportContext: this.currentReportContext,
+                    conversationId: this.conversationId
+                });
             }
             
             clearStorageIfNeeded() {
@@ -812,6 +846,15 @@
             }
             
             addMessage(sender, content, extractedText = null, type = 'normal') {
+                console.log('addMessage called with:', { sender, content, extractedText, type });
+                console.log('isInitialized result:', this.isInitialized());
+                
+                // Check if properly initialized before proceeding
+                if (!this.isInitialized()) {
+                    console.error('HealthSenseChat not properly initialized');
+                    return;
+                }
+                
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
                 
@@ -831,8 +874,13 @@
                 this.chatMessages.appendChild(messageDiv);
                 this.scrollToBottom();
                 
-                // Save to chat history
-                this.saveMessage(sender, content, extractedText, type);
+                // Save to chat history with error handling
+                try {
+                    this.saveMessage(sender, content, extractedText, type);
+                } catch (error) {
+                    console.error('Failed to save message:', error);
+                    // Continue without saving if there's an error
+                }
             }
             
             showTypingIndicator() {
@@ -861,7 +909,29 @@
                 this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
             }
             
+            isInitialized() {
+                const result = this.chatHistory && Array.isArray(this.chatHistory) && 
+                       this.chatMessages && this.fileInput;
+                console.log('isInitialized check:', {
+                    chatHistory: this.chatHistory,
+                    isArray: Array.isArray(this.chatHistory),
+                    chatMessages: this.chatMessages,
+                    fileInput: this.fileInput,
+                    result: result
+                });
+                return result;
+            }
+            
             saveMessage(sender, content, extractedText = null, type = 'normal') {
+                console.log('saveMessage called with:', { sender, content, extractedText, type });
+                console.log('Current chatHistory:', this.chatHistory);
+                
+                // Ensure chatHistory exists before using it
+                if (!this.chatHistory || !Array.isArray(this.chatHistory)) {
+                    console.warn('chatHistory not properly initialized, reinitializing...');
+                    this.initializeStorage();
+                }
+                
                 const message = {
                     sender,
                     content,
@@ -872,6 +942,7 @@
                     reportContext: this.currentReportContext ? this.currentReportContext.fileName : null
                 };
                 
+                console.log('About to push message:', message);
                 this.chatHistory.push(message);
                 
                 // Clean up old messages if storage is getting full
@@ -922,11 +993,14 @@
                         const parsed = JSON.parse(saved);
                         if (Array.isArray(parsed)) {
                             this.chatHistory = parsed;
+                            return parsed;
                         } else {
                             this.chatHistory = [];
+                            return [];
                         }
                     } else {
                         this.chatHistory = [];
+                        return [];
                     }
                 } catch (error) {
                     console.warn('Failed to load chat history:', error);
@@ -937,6 +1011,7 @@
                     } catch (clearError) {
                         console.warn('Failed to clear corrupted chat history:', clearError);
                     }
+                    return [];
                 }
             }
             
@@ -1046,30 +1121,60 @@
         
         // Initialize the chat when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            try {
-                window.healthSenseChat = new HealthSenseChat();
-                // Check storage health
-                if (window.healthSenseChat) {
-                    window.healthSenseChat.clearStorageIfNeeded();
-                }
-            } catch (error) {
-                console.error('Failed to initialize HealthSense chat:', error);
-                // Show error message to user
-                const chatMessages = document.getElementById('chatMessages');
-                if (chatMessages) {
-                    chatMessages.innerHTML = `
-                        <div class="message ai">
-                            <div class="message-content">
-                                <strong>HealthSense AI</strong><br>
-                                Hello! I\'m here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.
-                                <div class="disclaimer">
-                                    <strong>Disclaimer:</strong> This is for educational purposes only. Always consult your healthcare provider.
+            console.log('DOMContentLoaded event fired');
+            
+            const initializeChat = () => {
+                try {
+                    console.log('Starting chat initialization...');
+                    
+                    // Check if required elements exist
+                    const chatMessages = document.getElementById('chatMessages');
+                    const fileInput = document.getElementById('fileInput');
+                    
+                    console.log('Elements found during initialization:', {
+                        chatMessages: chatMessages,
+                        fileInput: fileInput
+                    });
+                    
+                    if (!chatMessages || !fileInput) {
+                        console.warn('Required elements not found, retrying in 100ms...');
+                        setTimeout(initializeChat, 100);
+                        return;
+                    }
+                    
+                    console.log('Creating HealthSenseChat instance...');
+                    window.healthSenseChat = new HealthSenseChat();
+                    
+                    // Check storage health
+                    if (window.healthSenseChat && window.healthSenseChat.isInitialized()) {
+                        window.healthSenseChat.clearStorageIfNeeded();
+                        console.log('HealthSense chat initialized successfully');
+                    } else {
+                        throw new Error('Chat initialization incomplete');
+                    }
+                } catch (error) {
+                    console.error('Failed to initialize HealthSense chat:', error);
+                    // Show error message to user
+                    const chatMessages = document.getElementById('chatMessages');
+                    if (chatMessages) {
+                        chatMessages.innerHTML = `
+                            <div class="message ai">
+                                <div class="message-content">
+                                    <strong>HealthSense AI</strong><br>
+                                    Hello! I\'m here to help you understand your lab reports and answer general health questions. You can either upload a PDF for analysis or ask me questions directly.
+                                    <div class="disclaimer">
+                                        <strong>Disclaimer:</strong> This is for educational purposes only. Always consult your healthcare provider.
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }
-            }
+            };
+            
+            // Start initialization
+            console.log('Starting chat initialization process...');
+            initializeChat();
         });
         
         function scrollToChat() {
